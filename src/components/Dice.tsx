@@ -4,7 +4,7 @@ import Die from '@/components/Die';
 import {nanoid} from 'nanoid';
 
 function Dice(props: {diceCount: number}) {
-
+    console.log("invocation")
     const randomNumbers:number[] = Array(props.diceCount).fill(0).map(() => Math.ceil(Math.random() * 6))
     const buttonRef = useRef<HTMLButtonElement>(null)
     const fillDice = (): {id: string, value: number, isHeld: boolean}[] => {
@@ -14,7 +14,11 @@ function Dice(props: {diceCount: number}) {
     const gameOver = dice.every(dieObj => dieObj.isHeld) && dice.every(dieObj => dieObj.value === dice[0].value)
     
     const rollDice = () => {
-        gameOver ? setDice(fillDice()) : setDice(prev => prev.map(dieObj => dieObj.isHeld ? dieObj : {...dieObj, value: Math.ceil(Math.random() * 6)}))
+        for (let i = 0; i < 10; i++) {
+            setTimeout(() => {
+                gameOver ? setDice(fillDice()) : setDice(prev => prev.map(dieObj => dieObj.isHeld ? dieObj : {...dieObj, value: Math.ceil(Math.random() * 6)}))
+            }, 100*i)
+        }
 
     }
     const freezeDice = (id:string) => {

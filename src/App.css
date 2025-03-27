@@ -9,6 +9,14 @@
   padding: 0;
   box-sizing: border-box;
 }
+.container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  gap: 1rem;
+}
 .main-container{
   background-color: #0b2434;
   height: 100%;
@@ -33,7 +41,7 @@
   margin-top: 2rem;
   text-align: center;
 }
-.game-container p{
+.game-description{
   width: 25%;
   font-family: 'Inter', sans-serif;
   font-size: 1.25rem;
@@ -96,4 +104,122 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+.dots-container{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  place-items: center;
+  justify-items: center;
+  /* border: 1px solid red; */
+  width: 3rem;
+  height: 3rem;
+
+}
+.dots {
+  font-size: 2rem;
+  color: #0b2434;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  width: 100%;
+  height: 100%;
+  margin-top: -1.5rem;
+  margin-left: auto;
+}
+.one-one{
+  grid-column: 1 / -1;
+  grid-row: 2 / 3;
+}
+.two-one{
+  grid-column: 1/2;
+  grid-row: 1/2;
+
+}
+.two-two{
+  grid-column: 3/4;
+  grid-row: 2/3;
+  margin-top: 1rem;
+}
+.three-one{
+  grid-column: 2/3;
+  grid-row: 1/2;
+}
+.three-two{
+  grid-column: 1/2;
+  grid-row: 2/3;
+  margin-top: 1rem;
+}
+.three-three{
+  grid-column: 3/4;
+  grid-row: 2/3;
+  margin-top: 1rem;
+}
+.four-one{
+  grid-column: 1/2;
+  grid-row: 1/2;
+}
+.four-two{
+  grid-column: 3/4;
+  grid-row: 1/2;
+}
+.four-three{
+  grid-column: 1/2;
+  grid-row: 3/4;
+}
+.four-four{
+  grid-column: 3/4;
+  grid-row: 3/4;
+}
+.five-one{
+  grid-column: 1/2;
+  grid-row: 1/2;
+}
+.five-two{
+  grid-column: 3/4;
+  grid-row: 1/2;
+}
+.five-three{
+  grid-column: 2/3;
+  grid-row: 2/3;
+}
+.five-four{
+  grid-column: 1/2;
+  grid-row: 3/4;
+}
+.five-five{
+  grid-column: 3/4;
+  grid-row: 3/4;
+}
+.six-one{
+  grid-column: 1/2;
+  grid-row: 1/2;
+}
+.six-two{
+  grid-column: 2/3;
+  grid-row: 1/2;
+}
+.six-three{
+  grid-column: 3/4;
+  grid-row: 1/2;
+}
+.six-four{
+  grid-column: 1/2;
+  grid-row: 3/4;
+}
+.six-five{
+  grid-column: 2/3;
+  grid-row: 3/4;
+}
+.six-six{
+  grid-column: 3/4;
+  grid-row: 3/4;
+}
+.die-value-light{
+  color: lightsteelblue;
+  font-size: 2rem;
+  font-weight: 100;
+  text-align: center;
+  position: absolute;
 }
