@@ -1,60 +1,59 @@
-import { useEffect, useState } from 'react';
-import { useWindowSize } from 'react-use'
+import { useEffect, useState ,useRef} from 'react';
 import Confetti from 'react-confetti'
 import Die from '@/components/Die';
+import {nanoid} from 'nanoid';
 
 function Dice(props: {diceCount: number}) {
 
-    const { width, height } = useWindowSize()
-    const getRandomNumber = () => (Math.floor(Math.random() * 6))+1
-    const [diceFaces, setDiceFaces] = useState<number[]>(Array(props.diceCount).fill(0).map(() => getRandomNumber()));
-    const [isLocked, setIsLocked] = useState<boolean[]>(Array(props.diceCount).fill(false));
-    const [isGameOver, setIsGameOver] = useState<boolean>(false);
-
-    const fillDiceFaces = () => {
-        return diceFaces.map((die,index) => !isLocked[index] ? getRandomNumber() : die)
+    const randomNumbers:number[] = Array(props.diceCount).fill(0).map(() => Math.ceil(Math.random() * 6))
+    const buttonRef = useRef<HTMLButtonElement>(null)
+    const fillDice = (): {id: string, value: number, isHeld: boolean}[] => {
+        return randomNumbers.map((value) => ({id: nanoid(), value:value, isHeld: false}))
     }
-    const handleRollDice = () => {
-        setDiceFaces(fillDiceFaces())
-    }
-    const startNewGame = () => {
-        setIsLocked(Array(props.diceCount).fill(false));
-        setDiceFaces(Array(props.diceCount).fill(0).map(() => getRandomNumber()));
-        setIsGameOver(false);
-    }
+    const [dice, setDice] = useState<{id: string, value: number, isHeld: boolean}[]>(() => fillDice());
+    const gameOver = dice.every(dieObj => dieObj.isHeld) && dice.every(dieObj => dieObj.value === dice[0].value)
     
-    function indicesWithEqualItems(newLocked: boolean[],die: number){
-        return newLocked.map((_,index) => diceFaces[index] === die? true : false);
-    }
-    const handleClick = (die: number) => {
-        setIsLocked(prev => indicesWithEqualItems(prev,die));
-    }
+    const rollDice = () => {
+        gameOver ? setDice(fillDice()) : setDice(prev => prev.map(dieObj => dieObj.isHeld ? dieObj : {...dieObj, value: Math.ceil(Math.random() * 6)}))
 
+    }
+    const freezeDice = (id:string) => {
+        setDice( (prev) => prev.map(dieObj => dieObj.id === id ? {...dieObj, isHeld: !dieObj.isHeld} : dieObj))
+    }
     useEffect(() => {
-        if(diceFaces.filter(item => item === diceFaces[0]).length === diceFaces.length){
-            setIsGameOver(true);
+        if (buttonRef.current) {
+            buttonRef.current.focus()
         }
-    }, [isLocked.filter(item => item === true).length]);
-
+    }, [gameOver])
+    
   return (
+    <>
+    {gameOver && <Confetti />}
+    <div aria-live='polite' className="sr-only">
+        {gameOver && <p>Congratulations! You won! Press "New Game" to start a new game.</p>}
+    </div>
     <section className='dice-container'>
         <div className='dice'>
-            {diceFaces.map((die,index) => (
-                <Die key={index} id={index} value={die} isHeld={isLocked[index]} onClick={() => handleClick(die)}/>
+            {dice.map(dieObj => (
+                <Die 
+                    key={dieObj.id} 
+                    id={dieObj.id}
+                    value={dieObj.value} 
+                    isHeld={dieObj.isHeld} 
+                    onClick={() => freezeDice(dieObj.id)}
+                />
             ))}
         </div>
-        {isLocked.includes(false)? 
-        <button 
+        <button
+            ref={buttonRef}
             className='roll-dice'
-            onClick={handleRollDice}
-        >Roll</button> 
-            : 
-        <button 
-            className='roll-dice'
-            onClick={startNewGame}
-        >New Game</button>}
-        {isGameOver && <Confetti width={width} height={height} gravity={0.3} numberOfPieces={400}/>}
+            onClick={() => rollDice()}
+            aria-label={gameOver ? 'New Game' : 'Roll'}
+        >
+        {gameOver ? 'New Game' : 'Roll'}
+        </button>
     </section>
+    </>
   )
 }
 
